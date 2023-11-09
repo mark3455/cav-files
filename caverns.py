@@ -1,3 +1,5 @@
+import sys
+import time
 # Function to calculate the Euclidean distance between two points
 def euclidean_distance(coord1, coord2):
     return ((coord1[0] - coord2[0])**2 + (coord1[1] - coord2[1])**2)**0.5
@@ -51,28 +53,52 @@ def find_shortest_path_and_length(num_caverns, coordinates, connectivity):
         return None, 0
 
 # Function to write the solution to a .csn file
-def write_solution_csn_file(path, length, filename):
-    with open(f"{filename}.csn", 'w') as file:
-        if path:
+def write_solution_csn_file(filepath, route):
+    with open(filepath, 'w') as file:
+        if route is not None:
             # Writing path as space-separated indices (1-based) followed by length
-            path_string = ' '.join(str(p + 1) for p in path)  # Convert path to 1-based index
-            file.write(f"Path: {path_string}\nLength: {length:.2f}")
+            # path_string = ' '.join(str(p + 1) for p in path)  # Convert path to 1-based index
+            file.write(" ".join(map(str,route)))
         else:
             # If there's no path, write 0
             file.write("0")
 
 # Example usage of the functions:
 # Parse the .cav file
-num_caverns, coordinates, connectivity = revised_parse_new_cav_file('/mnt/data/generated2000-1.cav')
+# num_caverns, coordinates, connectivity = revised_parse_new_cav_file('//mnt/data/generated2000-1.cav')
 
 # Find the shortest path and length
-path, length = find_shortest_path_and_length(num_caverns, coordinates, connectivity)
+# path, length = find_shortest_path_and_length(num_caverns, coordinates, connectivity)
 
 # Write the solution to a .csn file (specify the base name of your .cav file without the extension)
-write_solution_csn_file(path, length, '/mnt/data/generated2000-1')
+# write_solution_csn_file(path, length, '/mnt/data/generated2000-1')
 
 # Read and output the .csn file content
-with open('/mnt/data/generated2000-1.csn', 'r') as csn_file:
-    csn_output = csn_file.read()
+# with open('/mnt/data/generated2000-1.csn', 'r') as csn_file:
+    # csn_output = csn_file.read()
 
-print(csn_output)
+# print(csn_output)
+
+def main():
+    if len(sys.argv) != 2:
+        print("used 2 files (python file and cav file please)")
+        sys.exit(1)
+    
+    filepath = sys.argv[1]
+    input_file = filepath + ".cav"
+    csn_output = filepath + "csn"
+
+    num_caverns, coordinates , connectivity = revised_parse_new_cav_file(input_file)
+    start_time = time.time()
+    route = find_shortest_path_and_length(num_caverns, coordinates, connectivity)
+    end_time = time.time()
+
+    write_solution_csn_file(csn_output, route)
+    print(f"time taken: {end_time - start_time:.2f} seconds")
+
+
+if __name__ == "__main__":
+    main()
+    
+
+    
