@@ -63,21 +63,6 @@ def write_solution_csn_file(filepath, route):
             # If there's no path, write 0
             file.write("0")
 
-# Example usage of the functions:
-# Parse the .cav file
-# num_caverns, coordinates, connectivity = revised_parse_new_cav_file('//mnt/data/generated2000-1.cav')
-
-# Find the shortest path and length
-# path, length = find_shortest_path_and_length(num_caverns, coordinates, connectivity)
-
-# Write the solution to a .csn file (specify the base name of your .cav file without the extension)
-# write_solution_csn_file(path, length, '/mnt/data/generated2000-1')
-
-# Read and output the .csn file content
-# with open('/mnt/data/generated2000-1.csn', 'r') as csn_file:
-    # csn_output = csn_file.read()
-
-# print(csn_output)
 
 def main():
     if len(sys.argv) != 2:
