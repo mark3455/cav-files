@@ -13,6 +13,9 @@ def revised_parse_new_cav_file(filepath):
         coordinates = [(data[i], data[i + 1]) for i in range(1, num_caverns * 2 + 1, 2)]
         matrix_start = num_caverns * 2 + 1
         connectivity = [data[matrix_start + i:matrix_start + i + num_caverns] for i in range(0, num_caverns**2, num_caverns)]
+        print("connectivity matrix")
+        for row in connectivity:
+            print(row)
         return num_caverns, coordinates, connectivity
 
 # Function to find the shortest path using Dijkstra's algorithm without PriorityQueue
@@ -22,17 +25,22 @@ def find_shortest_path_and_length(num_caverns, coordinates, connectivity):
     previous = [None] * num_caverns
     visited = [False] * num_caverns
     while True:
+        print("distances", distances)
+        print("visited", visited)
+
         shortest_distance = float('inf')
         shortest_index = None
         for i in range(num_caverns):
             if distances[i] < shortest_distance and not visited[i]:
                 shortest_distance = distances[i]
                 shortest_index = i
+                print(f"shortest_index: {shortest_index}, shortest_distance: {shortest_distance}")
         if shortest_index is None:
             break
         for i in range(num_caverns):
             if connectivity[shortest_index][i] and not visited[i]:
                 new_distance = distances[shortest_index] + euclidean_distance(coordinates[shortest_index], coordinates[i])
+                print(f"i: {i}, new_distance: {new_distance}")
                 if new_distance < distances[i]:
                     distances[i] = new_distance
                     previous[i] = shortest_index
@@ -50,6 +58,7 @@ def find_shortest_path_and_length(num_caverns, coordinates, connectivity):
     if path[0] == 0:
         return path, total_length
     else:
+        print(f"path: {path}, total_length: {total_length}")
         return None, 0
 
 # Function to write the solution to a .csn file
@@ -71,11 +80,14 @@ def main():
     
     filepath = sys.argv[1]
     input_file = filepath + ".cav"
-    csn_output = filepath + "csn"
+    csn_output = filepath + ".csn"
 
     num_caverns, coordinates , connectivity = revised_parse_new_cav_file(input_file)
     start_time = time.time()
     route = find_shortest_path_and_length(num_caverns, coordinates, connectivity)
+    #print(f"num_caverns: {num_caverns}")
+    #print(f"coordinates: {coordinates}")
+    #print(f"connectivity: {connectivity}")
     end_time = time.time()
 
     write_solution_csn_file(csn_output, route)
